@@ -1,6 +1,34 @@
-import { Link } from "react-router-dom";
-
+/* eslint-disable no-unused-vars */
+import { Link, useNavigate } from "react-router-dom";
+import apiRequest from "../lib/apiRequest.js";
+import { useContext, useState } from "react";
 const Register = () => {
+	const [error, setError] = useState("");
+	const navigate = useNavigate();
+
+	const handleSubmit = async (e) => {
+		e.preventDefault();
+		setError("");
+
+		const formData = new FormData(e.target);
+
+		const email = formData.get("email");
+		const username = formData.get("username");
+		const password = formData.get("password");
+
+		try {
+			const res = await apiRequest.post("/auth/register", {
+				email,
+				username,
+				password,
+			});
+			console.log(res.data.data);
+			navigate("/");
+		} catch (error) {
+			setError(error.response.data.message);
+		}
+	};
+
 	return (
 		<>
 			<div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
@@ -11,7 +39,7 @@ const Register = () => {
 				</div>
 
 				<div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-					<form className="space-y-6" action="#" method="POST">
+					<form className="space-y-6" onSubmit={handleSubmit}>
 						<div>
 							<label
 								htmlFor="email"

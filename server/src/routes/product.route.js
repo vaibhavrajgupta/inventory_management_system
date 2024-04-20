@@ -4,10 +4,10 @@ import { addProduct, deleteProduct, getProducts, updateProduct } from "../contro
 
 const router = Router();
 
-router.route("/getProducts").get(getProducts);
+router.route("/get").get(getProducts);
 router.use(verifyToken);
-router.route("/addProduct").post(addProduct);
-router.route("/updateProduct/:id").patch(updateProduct);
-router.route("/deleteProduct/:id").post(deleteProduct);
+router.route("/add").post(addProduct);
+router.route("/update/:id").patch(updateProduct);
+router.route("/delete/:id").post(deleteProduct);
 
 export default router;
