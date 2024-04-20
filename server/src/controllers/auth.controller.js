@@ -88,6 +88,9 @@ export const logout = asyncHandler(async (req, res) => {
 		secure: true,
 	};
 
+	console.log("Heyyyyyy");
+	
+
 	return res
 		.status(200)
 		.clearCookie("token", options)

@@ -32,7 +32,7 @@ const App = () => {
 				{
 					path : "/addProduct",
 					element : <AddProduct/>
-				}
+				},
 			]
 		}
 	]);

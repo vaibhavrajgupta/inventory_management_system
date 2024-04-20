@@ -6,11 +6,10 @@ import { useEffect } from "react";
 import apiRequest from "../lib/apiRequest";
 
 const HomePage = () => {
-
-  const [rows, setRows] = useState([]);
+	const [rows, setRows] = useState([]);
 
 	const columns = [
-		{ field: "_id", headerName: "ID", width: 50 },
+		// { field: "_id", headerName: "ID", width: 50 },
 		{
 			field: "name",
 			headerName: "Name",
@@ -36,8 +35,6 @@ const HomePage = () => {
 			description: "This column has a value getter and is not sortable.",
 			sortable: true,
 			width: 220,
-			valueGetter: (value, row) =>
-				`${row.firstName || ""} ${row.lastName || ""}`,
 		},
 		{
 			field: "qrCode", // Custom field for QR code
@@ -54,14 +51,12 @@ const HomePage = () => {
 						alignItems: "center",
 					}}
 				>
-					<QrCode
-						value={params.row}
-					/>
+					<QrCode value={params.row} />
 				</div>
 			),
 		},
+
 	];
-  
 
 	// const rows = [
 	// 	{ id: 1, lastName: "Snow", firstName: "Jon", age: 14 },
@@ -75,23 +70,21 @@ const HomePage = () => {
 	// 	{ id: 9, lastName: "Roxie", firstName: "Harvey", age: 65 },
 	// ];
 
+	useEffect(() => {
+		const fetchData = async () => {
+			try {
+				const res = await apiRequest.get("/product/get");
+				setRows(res.data.data);
+				// console.log(i++);
+			} catch (error) {
+				console.error("Error fetching data:", error);
+			}
+		};
+		fetchData();
+	}, []);
 
-  useEffect(()=>{
-    const fetchData = async()=>{
-      try {
-        const res = await apiRequest.get("/product/get");
-        setRows(res.data.data);
-        // console.log(i++);
-      
-        
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    }
-    fetchData();
-  }, [])
-
-  
+	console.log(rows);
+	
 
 	return (
 		<div>
@@ -109,8 +102,8 @@ const HomePage = () => {
 					pageSizeOptions={[5]}
 					checkboxSelection
 					disableRowSelectionOnClick
-          rowHeight={130}
-          getRowId={(row) => row._id}
+					rowHeight={130}
+					getRowId={(row) => row._id}
 				/>
 			</Box>
 		</div>

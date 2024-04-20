@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 
-import { Navigate, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import apiRequest from "../lib/apiRequest";
 import { useState } from "react";
 
