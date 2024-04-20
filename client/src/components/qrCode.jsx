@@ -3,6 +3,7 @@ import QRCode from "react-qr-code";
 
 const QrCode = (props) => {
 	const propsValue = JSON.stringify(props.value);
+	
 	return (
 		<div
 			style={{ height: "auto", margin: "0 auto", maxWidth: 85, width: "100%" }}

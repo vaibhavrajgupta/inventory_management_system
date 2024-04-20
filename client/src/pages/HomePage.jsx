@@ -4,12 +4,16 @@ import QrCode from "../components/qrCode";
 import { useState } from "react";
 import { useEffect } from "react";
 import apiRequest from "../lib/apiRequest";
+import { useContext } from "react";
+import { AuthContext } from "../context/AuthContext";
+import { useNavigate } from "react-router-dom";
 
 const HomePage = () => {
 	const [rows, setRows] = useState([]);
+	const { currentUser } = useContext(AuthContext);
+	const navigate = useNavigate();
 
 	const columns = [
-		// { field: "_id", headerName: "ID", width: 50 },
 		{
 			field: "name",
 			headerName: "Name",
@@ -37,7 +41,7 @@ const HomePage = () => {
 			width: 220,
 		},
 		{
-			field: "qrCode", // Custom field for QR code
+			field: "qrCode",
 			headerName: "QR Code",
 			width: 110,
 			sortable: false,
@@ -55,36 +59,75 @@ const HomePage = () => {
 				</div>
 			),
 		},
-
+		{
+			field: "actions",
+			headerName: "Actions",
+			width: 200,
+			sortable: false,
+			renderCell: (params) => (
+				<div style={{ display: "flex", justifyContent: "center" }}>
+					<button
+						onClick={() => handleUpdate(params.row._id)}
+						style={{
+							marginRight: 10,
+							padding: "5px 10px",
+							border: "none",
+							borderRadius: 5,
+							backgroundColor: "#4caf50",
+							color: "white",
+							cursor: "pointer",
+						}}
+					>
+						Update
+					</button>
+					<button
+						onClick={() => handleDelete(params.row._id)}
+						style={{
+							padding: "5px 10px",
+							border: "none",
+							borderRadius: 5,
+							backgroundColor: "#f44336",
+							color: "white",
+							cursor: "pointer",
+						}}
+					>
+						Delete
+					</button>
+				</div>
+			),
+		},
 	];
 
-	// const rows = [
-	// 	{ id: 1, lastName: "Snow", firstName: "Jon", age: 14 },
-	// 	{ id: 2, lastName: "Lannister", firstName: "Cersei", age: 31 },
-	// 	{ id: 3, lastName: "Lannister", firstName: "Jaime", age: 31 },
-	// 	{ id: 4, lastName: "Stark", firstName: "Arya", age: 11 },
-	// 	{ id: 5, lastName: "Targaryen", firstName: "Daenerys", age: null },
-	// 	{ id: 6, lastName: "Melisandre", firstName: null, age: 150 },
-	// 	{ id: 7, lastName: "Clifford", firstName: "Ferrara", age: 44 },
-	// 	{ id: 8, lastName: "Frances", firstName: "Rossini", age: 36 },
-	// 	{ id: 9, lastName: "Roxie", firstName: "Harvey", age: 65 },
-	// ];
+	const handleUpdate = async(id) => {
+		// handle update logic here
+		console.log(id);
+		
+	};
+
+	const handleDelete = async (id) => {
+		if (!currentUser) {
+			navigate("/login");
+		} else {
+			try {
+				await apiRequest.delete(`/product/delete/${id}`);
+				setRows(rows.filter((row) => row._id !== id));
+			} catch (error) {
+				console.error("Error deleting data:", error);
+			}
+		}
+	};
 
 	useEffect(() => {
 		const fetchData = async () => {
 			try {
 				const res = await apiRequest.get("/product/get");
 				setRows(res.data.data);
-				// console.log(i++);
 			} catch (error) {
 				console.error("Error fetching data:", error);
 			}
 		};
 		fetchData();
 	}, []);
-
-	console.log(rows);
-	
 
 	return (
 		<div>
